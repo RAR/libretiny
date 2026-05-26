@@ -90,6 +90,28 @@ queue.AddLibrary(
     ],
 )
 
+# FreeRTOS kernel — wired from the GSDK mirror.
+# Confirmed for GSDK v4.5.0: kernel sources at this path (tasks.c, queue.c, etc.
+# at the root; portable/ subtree per port). Older GSDK lines used a Source/
+# subdir — re-verify if bumping past v4.5.x.
+FREERTOS_DIR = join(GSDK, "util", "third_party", "freertos", "kernel")
+
+queue.AddLibrary(
+    name="freertos-kernel",
+    base_dir=FREERTOS_DIR,
+    srcs=[
+        "+<*.c>",
+        "+<portable/MemMang/heap_4.c>",
+        "+<portable/GCC/ARM_CM4F/port.c>",
+    ],
+)
+
+env.Append(CPPPATH=[
+    join(FREERTOS_DIR, "include"),
+    join(FREERTOS_DIR, "portable", "GCC", "ARM_CM4F"),
+    join("$PROJECT_CORE_DIR", "base", "config"),  # for FreeRTOSConfig.h
+])
+
 # Our family's base + arduino sources (currently empty, but the directories
 # must be wired so subsequent tasks just drop files in).
 queue.AddLibrary(
