@@ -51,7 +51,7 @@ Default flash tool is **Simplicity Commander** (`commander`). For the SLWSTK6121
 pio run -t upload -e wgm160p-slwstk6121a
 ```
 
-PlatformIO routes through `tools/ltchiptool/soc/efm32gg11/flash.py`, which invokes:
+PlatformIO routes through `tools/silabs-efm32gg11/flash.py`, which invokes:
 
 ```sh
 commander flash --device EFM32GG11B820F2048GM64 <bin>

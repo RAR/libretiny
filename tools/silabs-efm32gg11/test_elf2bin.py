@@ -3,7 +3,7 @@ import subprocess
 
 import pytest
 
-from .elf2bin import elf_to_bin
+from elf2bin import elf_to_bin
 
 
 @pytest.fixture

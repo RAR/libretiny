@@ -29,6 +29,15 @@ env.Append(
         "ARM_MATH_CM4",
         ("F_CPU", "72000000L"),
         "LT_HAS_FREERTOS=1",
+        # Redirect the GSDK startup's `bl __START` to LibreTiny's lt_main(),
+        # which calls lt_init_family() + __libc_init_array() + main(). The
+        # default is _start (newlib), which would skip lt_init_family — leaving
+        # the chip on the uncalibrated HFRCO (~19 MHz) instead of 72 MHz HFXO+DPLL,
+        # and Phase 1 framework=base sketches would observe wrong timing.
+        # Mirrors the Reset_Handler -> lt_main routing used by beken-72xx and
+        # lightning-ln882h (which patch Reset_Handler directly; the GSDK startup
+        # exposes a __START hook so we redirect via preprocessor instead).
+        ("__START", "lt_main"),
     ],
     CCFLAGS=[
         "-mcpu=cortex-m4",

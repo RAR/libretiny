@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from .flash import flash_bin, reset_device
+from flash import flash_bin, reset_device
 
 
 def test_flash_bin_invokes_commander(tmp_path):
