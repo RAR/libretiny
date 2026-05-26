@@ -125,4 +125,15 @@ env.Append(CPPPATH=[
 # frameworks/arduino.py handles those via the equivalent mechanism. Family
 # builders only add SDK sources and any special fixup libraries here.
 
+# Linker: add nosys to LIBS so libg_nano.a's abort()/exit() paths can resolve
+# their references to _exit/_kill/_getpid/etc. against newlib's nosys stubs.
+# Our cores/silabs-efm32gg11/base/fixups/syscalls.c provides strong overrides
+# (notably _exit -> NVIC_SystemReset) — strong symbols defeat the weak nosys
+# defaults, but nosys backstops the rest of the newlib syscall surface (sbrk,
+# read, write, fstat, ...). Same pattern used by beken-72xx, lightning-ln882h,
+# realtek-ambz, realtek-ambz2.
+queue.AppendPublic(
+    LIBS=["nosys"],
+)
+
 queue.BuildLibraries()
