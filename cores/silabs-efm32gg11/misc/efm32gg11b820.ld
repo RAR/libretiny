@@ -1,6 +1,12 @@
 /* Phase 1 linker script for EFM32GG11B820F2048GM64.
  * Single flash image at 0x00000000 (no bootloader).
  * Vector table at start of flash. Heap above .bss; stack at top of RAM.
+ *
+ * The vendor startup file (Source/GCC/startup_efm32gg11b.S) initialises .data
+ * and .bss via CMSIS-style table-driven loops in Reset_Handler, indexing
+ * __copy_table_{start,end}__ and __zero_table_{start,end}__. Those symbols
+ * MUST be provided here even if our project happens to have no .data — the
+ * startup code unconditionally walks the tables. Empty tables are valid.
  */
 
 MEMORY
@@ -37,36 +43,62 @@ SECTIONS
         __exidx_end = .;
     } > FLASH
 
-    .preinit_array : {
+    /* CMSIS copy table: triplets of (src, dst, word_count) used by Reset_Handler
+     * to initialise .data from flash. We have one .data section so one entry. */
+    .copy.table : {
+        . = ALIGN(4);
+        __copy_table_start__ = .;
+        LONG (__etext)
+        LONG (__data_start__)
+        LONG ((__data_end__ - __data_start__) / 4)
+        __copy_table_end__ = .;
+    } > FLASH
+
+    /* CMSIS zero table: pairs of (start, word_count) used by Reset_Handler to
+     * zero .bss. Our linker zeroes .bss via the table-less _sbss/_ebss too,
+     * but the startup code uses the table; provide a single entry. */
+    .zero.table : {
+        . = ALIGN(4);
+        __zero_table_start__ = .;
+        LONG (__bss_start__)
+        LONG ((__bss_end__ - __bss_start__) / 4)
+        __zero_table_end__ = .;
+    } > FLASH
+
+    __etext = ALIGN(4);
+
+    .data : AT (__etext) {
+        __data_start__ = .;
+        _sdata = .;
+        *(.data*)
+        . = ALIGN(4);
         PROVIDE_HIDDEN (__preinit_array_start = .);
         KEEP(*(.preinit_array*))
         PROVIDE_HIDDEN (__preinit_array_end = .);
-    } > FLASH
-    .init_array : {
+        . = ALIGN(4);
         PROVIDE_HIDDEN (__init_array_start = .);
         KEEP(*(SORT(.init_array.*)))
         KEEP(*(.init_array*))
         PROVIDE_HIDDEN (__init_array_end = .);
-    } > FLASH
-    .fini_array : {
+        . = ALIGN(4);
         PROVIDE_HIDDEN (__fini_array_start = .);
         KEEP(*(SORT(.fini_array.*)))
         KEEP(*(.fini_array*))
         PROVIDE_HIDDEN (__fini_array_end = .);
-    } > FLASH
-
-    _sidata = LOADADDR(.data);
-    .data : {
-        _sdata = .;
-        *(.data*)
+        . = ALIGN(4);
         _edata = .;
-    } > RAM AT > FLASH
+        __data_end__ = .;
+    } > RAM
+
+    _sidata = LOADADDR(.data);   /* compat alias; vendor startup uses __etext */
 
     .bss : {
+        . = ALIGN(4);
         _sbss = .;
         __bss_start__ = .;
         *(.bss*)
         *(COMMON)
+        . = ALIGN(4);
         _ebss = .;
         __bss_end__ = .;
     } > RAM
@@ -86,5 +118,5 @@ SECTIONS
     _sstack = _estack - _stack_size;
     PROVIDE(_StackTop = _estack);
 
-    ASSERT(__HeapLimit >= _ebss, "region RAM overflowed with heap")
+    ASSERT(__HeapLimit >= __bss_end__, "region RAM overflowed with heap")
 }
