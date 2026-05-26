@@ -48,19 +48,23 @@ env.Append(
         "--specs=nano.specs",
         "-Wl,--gc-sections",
         "-Wl,-Map=" + join("$BUILD_DIR", "${PROGNAME}.map"),
-        "-T", env.subst("$LDSCRIPT_PATH"),
+        # NOTE: -T <ldscript> is added automatically by PIO's piobuild.py from
+        # $LDSCRIPT_PATH (set by env_configure() from board.build.ldscript). The
+        # filename is resolved via LIBPATH, which frameworks/base.py prepends
+        # with $CORES_DIR/<family>/misc — so we do NOT pass -T here ourselves.
     ],
     CPPPATH=[
         join(DEVICE_DIR, "Include"),
         join(EMLIB_DIR, "inc"),
         join(CMSIS_DIR, "Include"),
         join(COMMON_DIR, "inc"),
-        join("$PROJECT_CORE_DIR", "base"),
+        join("$FAMILY_DIR", "base"),
     ],
 )
 
-# Linker script path
-env.Replace(LDSCRIPT_PATH=join("$PROJECT_CORE_DIR", "misc", "efm32gg11b820.ld"))
+# Do NOT override LDSCRIPT_PATH here: env_configure() sets it from
+# board.build.ldscript ("efm32gg11b820.ld") and frameworks/base.py prepends
+# $CORES_DIR/<family>/misc to LIBPATH so the linker can find the script.
 
 # Add SDK sources: minimum (vendor startup + system) — enough to link a C main().
 queue.AddLibrary(
@@ -109,7 +113,7 @@ queue.AddLibrary(
 env.Append(CPPPATH=[
     join(FREERTOS_DIR, "include"),
     join(FREERTOS_DIR, "portable", "GCC", "ARM_CM4F"),
-    join("$PROJECT_CORE_DIR", "base", "config"),  # for FreeRTOSConfig.h
+    join("$FAMILY_DIR", "base", "config"),  # for FreeRTOSConfig.h
 ])
 
 # Note: cores/silabs-efm32gg11/base/ sources (api/*.c, port/*.c, fixups/*.c)
