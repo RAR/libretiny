@@ -82,6 +82,11 @@ queue.AddLibrary(
         "+<src/em_assert.c>",
         "+<src/em_cmu.c>",
         "+<src/em_gpio.c>",
+        "+<src/em_usart.c>",
+        "+<src/em_emu.c>",
+        "+<src/em_wdog.c>",
+        "+<src/em_timer.c>",
+        "+<src/em_msc.c>",
     ],
 )
 
