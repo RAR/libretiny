@@ -139,3 +139,46 @@ queue.AppendPublic(
 )
 
 queue.BuildLibraries()
+
+# ----------------------------------------------------------------------------
+# Phase 1 post-link wiring
+#
+# main.py's BuildProgram() produces ${BUILD_DIR}/raw_firmware.elf. Downstream it
+# calls BuildUF2OTA() which iterates env["UF2OTA"] feeding files into
+# ltchiptool's UF2 packer. For Phase 1 we don't yet have the proper image
+# packaging (that's T32/T33 territory: elf2bin.py + flash.py with EFM32-specific
+# offsets), so we wire a minimal post-link path:
+#
+#   1. objcopy raw_firmware.elf -> firmware.bin (raw flash image @0x00000000)
+#   2. cp     raw_firmware.elf -> firmware.elf  (so the dispatch's
+#                                                arm-none-eabi-size .../firmware.elf works)
+#   3. Set UF2OTA to feed firmware.bin into the app slot at offset 0x00000000
+#      (matches board flash.app="0x000000+0x200000"). ltchiptool then writes
+#      firmware.uf2 + firmware.bin (already produced) + the dated .uf2.
+# ----------------------------------------------------------------------------
+firmware_elf = "${BUILD_DIR}/firmware.elf"
+firmware_bin = "${BUILD_DIR}/firmware.bin"
+
+env.AddPostAction(
+    "${BUILD_DIR}/${PROGNAME}.elf",
+    [
+        env.VerboseAction(
+            " ".join([
+                "$OBJCOPY", "-O", "binary",
+                "${BUILD_DIR}/${PROGNAME}.elf", firmware_bin,
+            ]),
+            "Producing firmware.bin",
+        ),
+        env.VerboseAction(
+            "cp ${BUILD_DIR}/${PROGNAME}.elf " + firmware_elf,
+            "Producing firmware.elf",
+        ),
+    ],
+)
+
+env.Replace(
+    # Feed firmware.bin into ltchiptool's UF2 packer as the app payload.
+    UF2OTA=[
+        f"{firmware_bin}=flasher:app",
+    ],
+)
