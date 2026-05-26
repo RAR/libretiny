@@ -112,19 +112,13 @@ env.Append(CPPPATH=[
     join("$PROJECT_CORE_DIR", "base", "config"),  # for FreeRTOSConfig.h
 ])
 
-# Our family's base + arduino sources (currently empty, but the directories
-# must be wired so subsequent tasks just drop files in).
-queue.AddLibrary(
-    name="lt-family-base",
-    base_dir=join("$PROJECT_CORE_DIR", "base"),
-    srcs=["+<api/*.c>", "+<port/*.c>", "+<fixups/*.c>"],
-)
-
-if env.subst("$LT_HAS_ARDUINO") == "1":
-    queue.AddLibrary(
-        name="lt-family-arduino",
-        base_dir=join("$PROJECT_CORE_DIR", "arduino"),
-        srcs=["+<src/*.c>", "+<src/*.cpp>"],
-    )
+# Note: cores/silabs-efm32gg11/base/ sources (api/*.c, port/*.c, fixups/*.c)
+# are added automatically by frameworks/base.py via env.AddCoreSources() over
+# family.inheritance. We do NOT re-add them here — doing so would compile each
+# file twice and produce duplicate-symbol link errors.
+#
+# Same for cores/silabs-efm32gg11/arduino/{src,libraries}/ when framework=arduino:
+# frameworks/arduino.py handles those via the equivalent mechanism. Family
+# builders only add SDK sources and any special fixup libraries here.
 
 queue.BuildLibraries()
