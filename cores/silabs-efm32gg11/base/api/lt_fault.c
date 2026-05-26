@@ -15,34 +15,51 @@
 #include <stdio.h>
 
 static void dump_frame(uint32_t *sp, const char *kind) {
-    printf("\r\n*** %s ***\r\n", kind);
-    printf("  R0   = 0x%08lx\r\n", (unsigned long)sp[0]);
-    printf("  R1   = 0x%08lx\r\n", (unsigned long)sp[1]);
-    printf("  R2   = 0x%08lx\r\n", (unsigned long)sp[2]);
-    printf("  R3   = 0x%08lx\r\n", (unsigned long)sp[3]);
-    printf("  R12  = 0x%08lx\r\n", (unsigned long)sp[4]);
-    printf("  LR   = 0x%08lx\r\n", (unsigned long)sp[5]);
-    printf("  PC   = 0x%08lx\r\n", (unsigned long)sp[6]);
-    printf("  xPSR = 0x%08lx\r\n", (unsigned long)sp[7]);
-    printf("  CFSR = 0x%08lx\r\n", (unsigned long)SCB->CFSR);
-    printf("  HFSR = 0x%08lx\r\n", (unsigned long)SCB->HFSR);
-    NVIC_SystemReset();
+	printf("\r\n*** %s ***\r\n", kind);
+	printf("  R0   = 0x%08lx\r\n", (unsigned long)sp[0]);
+	printf("  R1   = 0x%08lx\r\n", (unsigned long)sp[1]);
+	printf("  R2   = 0x%08lx\r\n", (unsigned long)sp[2]);
+	printf("  R3   = 0x%08lx\r\n", (unsigned long)sp[3]);
+	printf("  R12  = 0x%08lx\r\n", (unsigned long)sp[4]);
+	printf("  LR   = 0x%08lx\r\n", (unsigned long)sp[5]);
+	printf("  PC   = 0x%08lx\r\n", (unsigned long)sp[6]);
+	printf("  xPSR = 0x%08lx\r\n", (unsigned long)sp[7]);
+	printf("  CFSR = 0x%08lx\r\n", (unsigned long)SCB->CFSR);
+	printf("  HFSR = 0x%08lx\r\n", (unsigned long)SCB->HFSR);
+	NVIC_SystemReset();
 }
 
 static void __attribute__((naked, used)) common_fault_entry(const char *kind) {
-    (void)kind;
-    __asm volatile(
-        "tst lr, #4           \n"
-        "ite eq               \n"
-        "mrseq r2, msp        \n"
-        "mrsne r2, psp        \n"
-        "mov r1, r0           \n"   /* kind into r1 */
-        "mov r0, r2           \n"   /* sp into r0   */
-        "b dump_frame         \n"
-    );
+	(void)kind;
+	__asm volatile("tst lr, #4           \n"
+				   "ite eq               \n"
+				   "mrseq r2, msp        \n"
+				   "mrsne r2, psp        \n"
+				   "mov r1, r0           \n" /* kind into r1 */
+				   "mov r0, r2           \n" /* sp into r0   */
+				   "b dump_frame         \n");
 }
 
-void HardFault_Handler(void)  { common_fault_entry("HardFault");  while (1); }
-void MemManage_Handler(void)  { common_fault_entry("MemManage");  while (1); }
-void BusFault_Handler(void)   { common_fault_entry("BusFault");   while (1); }
-void UsageFault_Handler(void) { common_fault_entry("UsageFault"); while (1); }
+void HardFault_Handler(void) {
+	common_fault_entry("HardFault");
+	while (1)
+		;
+}
+
+void MemManage_Handler(void) {
+	common_fault_entry("MemManage");
+	while (1)
+		;
+}
+
+void BusFault_Handler(void) {
+	common_fault_entry("BusFault");
+	while (1)
+		;
+}
+
+void UsageFault_Handler(void) {
+	common_fault_entry("UsageFault");
+	while (1)
+		;
+}

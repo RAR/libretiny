@@ -23,16 +23,16 @@
 #include "em_usart.h"
 
 struct SerialData {
-    /* USART instance handled by this Serial port. Phase 1: always USART0. */
-    USART_TypeDef *uart{nullptr};
-    /* USART location (LOC0..LOC31). Phase 1: USART0 LOC1 wires to WSTK VCOM. */
-    uint8_t loc{0};
-    /* Ring buffer pointer (== SerialClass::rxBuf) — exposed for the ISR. */
-    SerialRingBuffer *buf{nullptr};
-    /* RX overflow flag: set by the ISR when store_char() can't accept a byte
-     * because the ring is full. Read-and-clear via the family helper
-     * SerialClass_getOverflow() declared at the bottom of this header. */
-    volatile bool rx_overflow{false};
+	/* USART instance handled by this Serial port. Phase 1: always USART0. */
+	USART_TypeDef *uart{nullptr};
+	/* USART location (LOC0..LOC31). Phase 1: USART0 LOC1 wires to WSTK VCOM. */
+	uint8_t loc{0};
+	/* Ring buffer pointer (== SerialClass::rxBuf) — exposed for the ISR. */
+	SerialRingBuffer *buf{nullptr};
+	/* RX overflow flag: set by the ISR when store_char() can't accept a byte
+	 * because the ring is full. Read-and-clear via the family helper
+	 * SerialClass_getOverflow() declared at the bottom of this header. */
+	volatile bool rx_overflow{false};
 };
 
 /* Family extension: poll-and-clear the RX overflow flag of the default Serial

@@ -20,23 +20,23 @@
 #include <libretiny.h>
 
 lt_ota_type_t lt_ota_get_type(void) {
-    return OTA_TYPE_SINGLE;
+	return OTA_TYPE_SINGLE;
 }
 
 bool lt_ota_is_valid(uint8_t index) {
-    (void)index;
-    return false;  // no OTA image staged in Phase 1
+	(void)index;
+	return false; // no OTA image staged in Phase 1
 }
 
 uint8_t lt_ota_dual_get_current(void) {
-    return 0;  // single-image device
+	return 0; // single-image device
 }
 
 uint8_t lt_ota_dual_get_stored(void) {
-    return 0;  // single-image device
+	return 0; // single-image device
 }
 
 bool lt_ota_switch(bool revert) {
-    (void)revert;
-    return false;  // no upgrade image to activate in Phase 1
+	(void)revert;
+	return false; // no upgrade image to activate in Phase 1
 }

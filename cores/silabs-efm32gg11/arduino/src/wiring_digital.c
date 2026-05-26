@@ -7,8 +7,8 @@
  */
 
 #include "ArduinoFamily.h"
-#include <Arduino.h>
 #include "em_gpio.h"
+#include <Arduino.h>
 
 void pinMode(pin_size_t pin, PinMode mode) {
 	GPIO_Mode_TypeDef gm;
@@ -18,18 +18,18 @@ void pinMode(pin_size_t pin, PinMode mode) {
 			gm = gpioModeInput;
 			break;
 		case INPUT_PULLUP:
-			gm = gpioModeInputPull;
+			gm	= gpioModeInputPull;
 			out = 1U;
 			break;
 		case INPUT_PULLDOWN:
-			gm = gpioModeInputPull;
+			gm	= gpioModeInputPull;
 			out = 0U;
 			break;
 		case OUTPUT:
 			gm = gpioModePushPull;
 			break;
 		case OUTPUT_OPENDRAIN:
-			gm = gpioModeWiredAnd;
+			gm	= gpioModeWiredAnd;
 			out = 1U;
 			break;
 		default:

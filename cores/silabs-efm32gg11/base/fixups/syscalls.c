@@ -12,28 +12,27 @@
  * examples. Phase 2+ may replace these with FreeRTOS-aware versions.
  */
 
+#include "em_device.h"
 #include <errno.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "em_device.h"
 
 /* exit/abort -> hardware reset. Marked noreturn so newlib's abort path is
  * happy and so callers don't pile up dead code after a known-fatal call. */
-__attribute__((noreturn))
-void _exit(int status) {
-    (void)status;
-    NVIC_SystemReset();
-    while (1) {}
+__attribute__((noreturn)) void _exit(int status) {
+	(void)status;
+	NVIC_SystemReset();
+	while (1) {}
 }
 
 int _kill(int pid, int sig) {
-    (void)pid;
-    (void)sig;
-    errno = ENOSYS;
-    return -1;
+	(void)pid;
+	(void)sig;
+	errno = ENOSYS;
+	return -1;
 }
 
 int _getpid(void) {
-    /* Conventionally 1 for a single-process freestanding environment. */
-    return 1;
+	/* Conventionally 1 for a single-process freestanding environment. */
+	return 1;
 }

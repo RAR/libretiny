@@ -10,6 +10,6 @@
 // Keep all entries here as single-token defines. Anything richer (sizes as
 // expressions, derived addresses, etc.) lives in a sibling C/C++ header.
 
-#define LT_HAS_FREERTOS  1
-#define LT_HAS_LWIP      0
-#define LT_HAS_MBEDTLS   0
+#define LT_HAS_FREERTOS 1
+#define LT_HAS_LWIP		0
+#define LT_HAS_MBEDTLS	0

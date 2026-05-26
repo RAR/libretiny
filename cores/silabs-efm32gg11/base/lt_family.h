@@ -5,9 +5,9 @@
 
 // Silicon Labs Gecko SDK pulls in the device header per chip variant.
 // This header makes it available across the family's core code.
-#include "em_device.h"
 #include "em_chip.h"
 #include "em_cmu.h"
+#include "em_device.h"
 #include "em_gpio.h"
 
 // Choose the main UART output port. WSTK virtual COM is on USART0 (LOC1) and

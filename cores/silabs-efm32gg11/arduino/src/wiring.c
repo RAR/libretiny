@@ -9,11 +9,11 @@
  */
 
 #include "ArduinoFamily.h"
-#include <Arduino.h>
 #include "FreeRTOS.h"
-#include "task.h"
 #include "em_cmu.h"
 #include "em_timer.h"
+#include "task.h"
+#include <Arduino.h>
 
 uint32_t millis(void) {
 	return (uint32_t)((xTaskGetTickCount() * 1000U) / configTICK_RATE_HZ);
@@ -23,12 +23,12 @@ uint32_t micros(void) {
 	static bool initialised = false;
 	if (!initialised) {
 		TIMER_Init_TypeDef init = TIMER_INIT_DEFAULT;
-		init.prescale = timerPrescale64;
+		init.prescale			= timerPrescale64;
 		TIMER_Init(TIMER0, &init);
 		initialised = true;
 	}
 	uint64_t ticks = TIMER_CounterGet(TIMER0);
-	uint32_t hz = CMU_ClockFreqGet(cmuClock_TIMER0) / 64U;
+	uint32_t hz	   = CMU_ClockFreqGet(cmuClock_TIMER0) / 64U;
 	return (uint32_t)((ticks * 1000000ULL) / hz);
 }
 

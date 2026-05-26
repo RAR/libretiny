@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "lt_family.h"
 #include "em_gpio.h"
+#include "lt_family.h"
 
 /* Decode the (port << 4 | pin) encoding into emlib (GPIO_Port_TypeDef, pin).
  * Used by wiring_digital.c, wiring_irq.c (future), and the Serial library. */

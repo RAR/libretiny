@@ -27,8 +27,8 @@
 
 extern "C" {
 
-#include "lt_family.h"
 #include "FreeRTOS.h"
+#include "lt_family.h"
 #include "task.h"
 
 // Forward decl of common's lt_init_family() implementation (cores/.../lt_init.c).

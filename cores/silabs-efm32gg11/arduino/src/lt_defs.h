@@ -10,5 +10,5 @@
  * the family-specific SerialClass overrides (USART0 LOC1 + RX IRQ ring buffer).
  */
 #define LT_ARD_HAS_SERIAL  1
-#define LT_ARD_HAS_WIFI    0
+#define LT_ARD_HAS_WIFI	   0
 #define LT_ARD_MD5_MBEDTLS 0

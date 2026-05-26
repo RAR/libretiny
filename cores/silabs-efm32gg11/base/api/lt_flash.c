@@ -25,17 +25,17 @@
 #include <libretiny.h>
 
 lt_flash_id_t lt_flash_get_id(void) {
-    // EFM32GG11B has internal flash only (no external SPI flash).
-    // Return a synthetic identifier so callers querying chip ID get
-    // something stable. Manufacturer 0x00 (no JEDEC ID for internal flash).
-    lt_flash_id_t id = {
-        .manufacturer_id = 0x00,
-        .chip_id         = 0x00,
-        .chip_size_id    = 0x15,   // 2^21 = 2 MiB (matches EFM32GG11B820 flash size)
-    };
-    return id;
+	// EFM32GG11B has internal flash only (no external SPI flash).
+	// Return a synthetic identifier so callers querying chip ID get
+	// something stable. Manufacturer 0x00 (no JEDEC ID for internal flash).
+	lt_flash_id_t id = {
+		.manufacturer_id = 0x00,
+		.chip_id		 = 0x00,
+		.chip_size_id	 = 0x15, // 2^21 = 2 MiB (matches EFM32GG11B820 flash size)
+	};
+	return id;
 }
 
 uint32_t lt_flash_get_size(void) {
-    return 2 * 1024 * 1024;  // 2 MiB internal flash on EFM32GG11B820
+	return 2 * 1024 * 1024; // 2 MiB internal flash on EFM32GG11B820
 }

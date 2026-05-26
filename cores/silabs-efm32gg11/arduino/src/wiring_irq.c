@@ -15,15 +15,15 @@
  */
 
 #include "ArduinoFamily.h"
-#include <Arduino.h>
-#include "em_gpio.h"
 #include "em_core.h"
+#include "em_gpio.h"
+#include <Arduino.h>
 
 /* 16 EXTI lines, indexed by pin number only. */
 #define EFM32_EXTI_LINES 16
 
-static voidFuncPtrParam volatile g_callbacks[EFM32_EXTI_LINES] = {0};
-static void *volatile g_params[EFM32_EXTI_LINES]              = {0};
+static volatile voidFuncPtrParam g_callbacks[EFM32_EXTI_LINES] = {0};
+static void *volatile g_params[EFM32_EXTI_LINES]			   = {0};
 
 static void dispatch(uint32_t mask) {
 	for (uint32_t i = 0; i < EFM32_EXTI_LINES; ++i) {
@@ -36,15 +36,16 @@ static void dispatch(uint32_t mask) {
 
 void attachInterruptParam(pin_size_t pin, voidFuncPtrParam cb, PinStatus mode, void *param) {
 	uint32_t idx = pin_index(pin);
-	if (idx >= EFM32_EXTI_LINES) return;
+	if (idx >= EFM32_EXTI_LINES)
+		return;
 
-	bool rising  = (mode == RISING) || (mode == CHANGE);
+	bool rising	 = (mode == RISING) || (mode == CHANGE);
 	bool falling = (mode == FALLING) || (mode == CHANGE);
 
 	CORE_DECLARE_IRQ_STATE;
 	CORE_ENTER_ATOMIC();
 	g_callbacks[idx] = cb;
-	g_params[idx]    = param;
+	g_params[idx]	 = param;
 	/* EFM32 EXTI: intNo == pin number (0-15); port selects which port
 	 * drives the line. Last-writer-wins across ports for a given idx. */
 	GPIO_ExtIntConfig(pin_port(pin), idx, idx, rising, falling, true);
@@ -56,12 +57,13 @@ void attachInterruptParam(pin_size_t pin, voidFuncPtrParam cb, PinStatus mode, v
 
 void detachInterrupt(pin_size_t pin) {
 	uint32_t idx = pin_index(pin);
-	if (idx >= EFM32_EXTI_LINES) return;
+	if (idx >= EFM32_EXTI_LINES)
+		return;
 	CORE_DECLARE_IRQ_STATE;
 	CORE_ENTER_ATOMIC();
 	GPIO_IntDisable(1U << idx);
 	g_callbacks[idx] = NULL;
-	g_params[idx]    = NULL;
+	g_params[idx]	 = NULL;
 	CORE_EXIT_ATOMIC();
 }
 
