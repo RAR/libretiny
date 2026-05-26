@@ -18,6 +18,7 @@ typedef enum {
 	F_BK7251   = 0x6A82CC42, // Beken 7251/7252
 	F_BL60X	   = 0xDE1270B7, // Boufallo 602
 	F_LN882H   = 0xA38090A8, // Lightning LN882H
+	F_EFM32GG11 = 0xEF326611, // Silicon Labs EFM32 Giant Gecko 11
 } lt_cpu_family_t;
 
 typedef enum {
