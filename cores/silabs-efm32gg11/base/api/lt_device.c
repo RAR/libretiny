@@ -37,8 +37,9 @@ lt_reboot_reason_t lt_get_reboot_reason(void) {
     // RMU->RSTCAUSE bits indicate the cause of the most recent reset.
     uint32_t cause = RMU->RSTCAUSE;
     if (cause & RMU_RSTCAUSE_PORST)        return REBOOT_REASON_POWER;
-    if (cause & RMU_RSTCAUSE_BODAVDD0)     return REBOOT_REASON_BROWNOUT;
-    if (cause & RMU_RSTCAUSE_BODAVDD1)     return REBOOT_REASON_BROWNOUT;
+    // EFM32GG11B has a single AVDD brown-out reset cause (RMU_RSTCAUSE_AVDDBOD).
+    // Series-2 parts split it into BODAVDD0/BODAVDD1 — those macros don't exist here.
+    if (cause & RMU_RSTCAUSE_AVDDBOD)      return REBOOT_REASON_BROWNOUT;
     if (cause & RMU_RSTCAUSE_EXTRST)       return REBOOT_REASON_HARDWARE;
     if (cause & RMU_RSTCAUSE_WDOGRST)      return REBOOT_REASON_WATCHDOG;
     if (cause & RMU_RSTCAUSE_SYSREQRST)    return REBOOT_REASON_SOFTWARE;
