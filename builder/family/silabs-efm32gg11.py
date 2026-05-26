@@ -18,8 +18,8 @@ if not isdir(SDK_DIR):
 
 GSDK = join(SDK_DIR, "gecko_sdk")
 DEVICE_DIR = join(GSDK, "platform", "Device", "SiliconLabs", "EFM32GG11B")
-EMLIB_DIR  = join(GSDK, "platform", "emlib")
-CMSIS_DIR  = join(GSDK, "platform", "CMSIS", "Core")
+EMLIB_DIR = join(GSDK, "platform", "emlib")
+CMSIS_DIR = join(GSDK, "platform", "CMSIS", "Core")
 COMMON_DIR = join(GSDK, "platform", "common")
 
 # Compiler flags
@@ -112,11 +112,13 @@ queue.AddLibrary(
     ],
 )
 
-env.Append(CPPPATH=[
-    join(FREERTOS_DIR, "include"),
-    join(FREERTOS_DIR, "portable", "GCC", "ARM_CM4F"),
-    join("$FAMILY_DIR", "base", "config"),  # for FreeRTOSConfig.h
-])
+env.Append(
+    CPPPATH=[
+        join(FREERTOS_DIR, "include"),
+        join(FREERTOS_DIR, "portable", "GCC", "ARM_CM4F"),
+        join("$FAMILY_DIR", "base", "config"),  # for FreeRTOSConfig.h
+    ]
+)
 
 # Note: cores/silabs-efm32gg11/base/ sources (api/*.c, port/*.c, fixups/*.c)
 # are added automatically by frameworks/base.py via env.AddCoreSources() over
@@ -163,10 +165,15 @@ env.AddPostAction(
     "${BUILD_DIR}/${PROGNAME}.elf",
     [
         env.VerboseAction(
-            " ".join([
-                "$OBJCOPY", "-O", "binary",
-                "${BUILD_DIR}/${PROGNAME}.elf", firmware_bin,
-            ]),
+            " ".join(
+                [
+                    "$OBJCOPY",
+                    "-O",
+                    "binary",
+                    "${BUILD_DIR}/${PROGNAME}.elf",
+                    firmware_bin,
+                ]
+            ),
             "Producing firmware.bin",
         ),
         env.VerboseAction(
