@@ -52,4 +52,11 @@ typedef enum {
 	LN882HF = CPU_MODEL(F_LN882H, 0x00), // TODO / QFN24
 	LN882HK = CPU_MODEL(F_LN882H, 0x00), // TODO / QFN32
 	LN882HC = CPU_MODEL(F_LN882H, 0x00), // TODO / QFN40
+	// Silicon Labs EFM32GG11
+	// Board build.mcu is "efm32gg11" -> upper-cased to MCU=EFM32GG11; common
+	// lt_cpu_get_model() returns MCU cast to lt_cpu_model_t, so the bare
+	// uppercase token must exist as an enum entry. EFM32GG11B is a hint name
+	// for the family chip; Phase 1 has no per-part DEVINFO read yet.
+	EFM32GG11  = CPU_MODEL(F_EFM32GG11, 0x00), // TODO: read DEVINFO chip ID
+	EFM32GG11B = EFM32GG11,
 } lt_cpu_model_t;
