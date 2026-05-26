@@ -4,12 +4,13 @@
 
 from os.path import isdir, join
 
-Import("env")
-from typing import Dict
+from SCons.Script import DefaultEnvironment, Environment
+
+env: Environment = DefaultEnvironment()
 
 # Family-level setup
+queue = env.AddLibraryQueue("silabs-efm32gg11")
 env.ConfigureFamily()
-queue = env.AddLibraryQueue()
 
 SDK_DIR = env.subst("$SDK_DIR")
 if not isdir(SDK_DIR):
@@ -18,13 +19,13 @@ if not isdir(SDK_DIR):
 GSDK = join(SDK_DIR, "gecko_sdk")
 DEVICE_DIR = join(GSDK, "platform", "Device", "SiliconLabs", "EFM32GG11B")
 EMLIB_DIR  = join(GSDK, "platform", "emlib")
-CMSIS_DIR  = join(GSDK, "platform", "CMSIS")
+CMSIS_DIR  = join(GSDK, "platform", "CMSIS", "Core")
+COMMON_DIR = join(GSDK, "platform", "common")
 
 # Compiler flags
 env.Append(
     CPPDEFINES=[
         "EFM32GG11B820F2048GM64=1",
-        "__FPU_PRESENT=1",
         "ARM_MATH_CM4",
         ("F_CPU", "72000000L"),
         "LT_HAS_FREERTOS=1",
@@ -53,6 +54,7 @@ env.Append(
         join(DEVICE_DIR, "Include"),
         join(EMLIB_DIR, "inc"),
         join(CMSIS_DIR, "Include"),
+        join(COMMON_DIR, "inc"),
         join("$PROJECT_CORE_DIR", "base"),
     ],
 )

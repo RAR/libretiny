@@ -1,10 +1,15 @@
 #pragma once
 
 // Silicon Labs EFM32GG11B820F2048GM64 (Cortex-M4F, 72 MHz, 2 MB flash, 512 KB SRAM)
-#define LT_HAS_FREERTOS    1
-#define LT_HAS_LWIP        0    // Phase 2
-#define LT_HAS_MBEDTLS     0    // Phase 2
+//
+// NOTE: lt_defs.h is also consumed by the LibreTiny SCons builder as a config
+// file (builder/utils/config.py: LoadDefines). The parser is strict:
+//   - Only `#define KEY VALUE` lines are recognized.
+//   - VALUE must be a single token (numeric literal or identifier). Multi-token
+//     expressions (e.g. `(2048u * 1024u)`) and trailing `//` comments break it.
+// Keep all entries here as single-token defines. Anything richer (sizes as
+// expressions, derived addresses, etc.) lives in a sibling C/C++ header.
 
-// Flash + RAM
-#define LT_DEV_FLASH_SIZE  (2048u * 1024u)
-#define LT_DEV_RAM_SIZE    (512u * 1024u)
+#define LT_HAS_FREERTOS  1
+#define LT_HAS_LWIP      0
+#define LT_HAS_MBEDTLS   0

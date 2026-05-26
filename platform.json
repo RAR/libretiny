@@ -94,9 +94,6 @@
       "version_prefix": true,
       "toolchains": {
         "any": "gccarmnoneeabi@~1.100301.0"
-      },
-      "libraries": {
-        "freertos": "10.4.3"
       }
     },
     "framework-arduino-api": {
