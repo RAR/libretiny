@@ -154,18 +154,17 @@ queue.BuildLibraries()
 # ----------------------------------------------------------------------------
 # Phase 1 post-link wiring
 #
-# main.py's BuildProgram() produces ${BUILD_DIR}/raw_firmware.elf. Downstream it
-# calls BuildUF2OTA() which iterates env["UF2OTA"] feeding files into
-# ltchiptool's UF2 packer. For Phase 1 we don't yet have the proper image
-# packaging (that's T32/T33 territory: elf2bin.py + flash.py with EFM32-specific
-# offsets), so we wire a minimal post-link path:
-#
-#   1. objcopy raw_firmware.elf -> firmware.bin (raw flash image @0x00000000)
-#   2. cp     raw_firmware.elf -> firmware.elf  (so the dispatch's
-#                                                arm-none-eabi-size .../firmware.elf works)
-#   3. Set UF2OTA to feed firmware.bin into the app slot at offset 0x00000000
-#      (matches board flash.app="0x000000+0x200000"). ltchiptool then writes
-#      firmware.uf2 + firmware.bin (already produced) + the dated .uf2.
+# main.py's BuildProgram() produces ${BUILD_DIR}/raw_firmware.elf. We need:
+#   - firmware.bin: raw flash image (Commander/J-Link flashes this directly)
+#   - firmware.elf: same as raw_firmware.elf, renamed so the size dispatcher's
+#       `arm-none-eabi-size .../firmware.elf` finds it
+#   - firmware.uf2: stub copy of firmware.bin so main.py's downstream targets
+#       (which Depends() on this path) resolve. Phase 1 has no proper UF2
+#       packaging — ltchiptool's UF2 writer requires a per-family SocInterface
+#       module (a hardcoded if-chain in ltchiptool/soc/interface.py: bk72xx /
+#       ambz / ambz2 / ln882h) which doesn't yet exist for EFM32. Adding one
+#       is upstream-ltchiptool work, not in Phase 1 scope. Phase 2 will write
+#       a proper SocInterface and PR it to libretiny-eu/ltchiptool.
 # ----------------------------------------------------------------------------
 firmware_elf = "${BUILD_DIR}/firmware.elf"
 firmware_bin = "${BUILD_DIR}/firmware.bin"
@@ -192,8 +191,30 @@ env.AddPostAction(
     ],
 )
 
+
+# Override main.py's BuildUF2OTA for Phase 1: skip the ltchiptool UF2 packer
+# (no SocInterface yet — see comment block above) and just copy firmware.bin to
+# firmware.uf2 so downstream Depends() resolves.
+def _phase1_uf2_stub(env, *args, **kwargs):
+    import shutil
+
+    print("|-- firmware.uf2 (Phase 1 stub: copy of firmware.bin; proper UF2")
+    print("|   packaging deferred until ltchiptool SoC plugin lands)")
+    shutil.copy(env.subst(firmware_bin), env.subst("${BUILD_DIR}/firmware.uf2"))
+
+
+from SCons.Script import Builder  # noqa: E402
+
+env.Append(
+    BUILDERS=dict(
+        BuildUF2OTA=Builder(
+            action=[env.VerboseAction(_phase1_uf2_stub, "Phase 1: UF2 stub")]
+        )
+    )
+)
+
 env.Replace(
-    # Feed firmware.bin into ltchiptool's UF2 packer as the app payload.
+    # Placeholder; main.py still references env["UF2OTA"] for upload logic.
     UF2OTA=[
         f"{firmware_bin}=flasher:app",
     ],
