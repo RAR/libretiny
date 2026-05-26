@@ -32,15 +32,20 @@ void lt_init_family(void) {
 
     // DPLL configuration: 72 MHz from 50 MHz HFXO.
     // Ratio = (N+1) / (M+1).  N=71, M=49  ->  72/50 = 1.44, target 72 MHz.
+    // NOTE: GG11's CMU_DPLLInit_TypeDef (em_cmu.h Series-1 variant) has no
+    // .ditherEn member — spread-spectrum is controlled via ssInterval/ssAmplitude
+    // (kept at zero here to disable SSC). Series-2 parts have the ditherEn field;
+    // we are not on Series 2.
     CMU_DPLLInit_TypeDef dpllInit = {
         .frequency = 72000000U,
         .n = 71U,
         .m = 49U,
+        .ssInterval = 0U,
+        .ssAmplitude = 0U,
         .refClk = cmuDPLLClkSel_Hfxo,
         .edgeSel = cmuDPLLEdgeSel_Fall,
         .lockMode = cmuDPLLLockMode_Phase,
         .autoRecover = true,
-        .ditherEn = false,
     };
     if (!CMU_DPLLLock(&dpllInit)) {
         // DPLL failed to lock; remain on HFXO 50 MHz (degraded but functional).
