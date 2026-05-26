@@ -14,6 +14,7 @@
 	"frameworks": ["base", "arduino"],
 	"platform": "libretiny",
 	"upload": {
+		"flash_size": 2097152,
 		"maximum_ram_size": 524288,
 		"maximum_size": 2097152,
 		"protocol": "commander",

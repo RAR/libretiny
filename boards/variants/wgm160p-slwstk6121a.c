@@ -1,10 +1,9 @@
-/* This file was hand-written for the WGM160P SLWSTK6121A board.
+/* This file is hand-written for the WGM160P SLWSTK6121A board.
  *
- * See wgm160p-slwstk6121a.h for the explanation of why boardgen could not
- * generate this file yet, and the follow-up tracked under Task 35.
+ * See wgm160p-slwstk6121a.h for why boardgen 0.12.0 cannot autogenerate it.
  *
  * The 'gpio' field stores the EFM32 (port_index << 4) | pin_number encoding;
- * cores/silabs-efm32gg11/arduino/src/ArduinoFamily.h (Task 24) will provide
+ * cores/silabs-efm32gg11/arduino/src/ArduinoFamily.h provides
  * helpers/macros to decode it into emlib GPIO_Port_TypeDef / pin pairs.
  */
 

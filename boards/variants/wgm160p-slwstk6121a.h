@@ -1,21 +1,22 @@
-/* This file was hand-written for the WGM160P SLWSTK6121A board.
+/* This file is hand-written for the WGM160P SLWSTK6121A board.
  *
- * boardgen 0.12.0 cannot currently process this board JSON because:
- *   - the pin "role" enum (NC/IO/UART/SPI/...) does not include 'PCB' or
- *     'ARD' which we use for the WSTK silkscreen and Arduino-name fields,
- *   - the Board pydantic model requires build.family and upload.flash_size
- *     which our minimal silabs-efm32gg11 base does not yet provide,
- *   - the schema has no notion of EFM32 PA/PB/.. port-prefixed pin names.
+ * boardgen 0.12.0 now accepts our board JSON (after adding upload.flash_size
+ * and renaming our silkscreen field from 'PCB' to the schema's 'PHYSICAL'),
+ * but the generated variant is degenerate (PINS_COUNT=0, no .c emitted)
+ * because boardgen's pin model assumes:
+ *   - the pin number is `re.sub(r"\D","",GPIO_name)` — so PA4 collides with
+ *     PB4/PD4/PE4 (all -> "4"). EFM32 needs port-aware encoding.
+ *   - the Arduino label field is 'ARD' with values D0/D1/.../A0/A1/...
+ *     ('LED0', 'BTN0', etc. are silently dropped); the LibreTiny convention
+ *     for board-specific names (LED0, BTN0) doesn't fit boardgen's model.
  *
- * Follow-up: extend boardgen with an EFM32 pin role + 'ARD' key (or
- * normalise board JSONs to the existing role enum) so this file can be
- * regenerated from the JSON. Tracked under Task 35 of the EFM32GG11 port.
+ * Both gaps are upstream-boardgen work, separate from the LibreTiny PR.
  *
- * EFM32 pin encoding: (port_index << 4) | pin_number
+ * EFM32 pin encoding used below: (port_index << 4) | pin_number
  *   port A=0, B=1, C=2, D=3, E=4, F=5
  *   PA4=0x04 PA5=0x05 PD6=0x36 PD8=0x38 PE6=0x46 PE7=0x47
  * This matches the encoding cores/silabs-efm32gg11/arduino/src/ArduinoFamily.h
- * is expected to use (Task 24).
+ * uses to unpack into emlib GPIO_Port_TypeDef + pin pairs.
  */
 
 #pragma once
