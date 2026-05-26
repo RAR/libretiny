@@ -39,6 +39,7 @@ env.Append(
         "-ffunction-sections",
         "-fdata-sections",
         "--specs=nano.specs",
+        "--specs=nosys.specs",
     ],
     LINKFLAGS=[
         "-mcpu=cortex-m4",
@@ -46,6 +47,7 @@ env.Append(
         "-mfloat-abi=hard",
         "-mfpu=fpv4-sp-d16",
         "--specs=nano.specs",
+        "--specs=nosys.specs",
         "-Wl,--gc-sections",
         "-Wl,-Map=" + join("$BUILD_DIR", "${PROGNAME}.map"),
         # NOTE: -T <ldscript> is added automatically by PIO's piobuild.py from
