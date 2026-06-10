@@ -7,14 +7,15 @@
  * JuiceBox 40 (probed via gpio_get/gpio_set over the unauthenticated runtime
  * shell, 2026-05). The JuiceBox repurposes PB5 away from the module's nominal
  * UART_CTS to an RGB LED channel. Colors bench-confirmed 2026-06-10 by driving
- * each channel via SWD: PB3=red, PB5=green, both active-HIGH. PB6 produced no
- * visible output when driven high — presumed the blue channel (it is an LED
- * line in the Gecko OS config); possibly very dim, unpopulated, or dead on the
- * probed unit. Treat blue as unverified.
+ * channels individually via SWD: PB3=red, PB5=green, PD8=blue, all
+ * ACTIVE-HIGH. PD8 was found by a port-by-port GPIO sweep — it is NOT in the
+ * Gecko OS GPIO usage map (that trace was incomplete). PB6, listed as "RGB" in
+ * that map, produced no visible output when driven; its real role is unknown,
+ * so it is not exposed as an Arduino pin.
  *
  * EFM32 pin encoding: (port_index << 4) | pin_number
  *   port A=0, B=1, C=2, D=3, E=4, F=5
- *   PB3=0x13 PB5=0x15 PB6=0x16 PC4=0x24 PE6=0x46 PE7=0x47
+ *   PB3=0x13 PB5=0x15 PD8=0x38 PC4=0x24 PE6=0x46 PE7=0x47
  * This matches cores/silabs-efm32gg11/arduino/src/ArduinoFamily.h.
  */
 
@@ -42,7 +43,7 @@
 // -------------------
 #define PIN_PB3 0x13u // PB3 (RGB LED red, active-high)
 #define PIN_PB5 0x15u // PB5 (RGB LED green, active-high)
-#define PIN_PB6 0x16u // PB6 (RGB LED blue?, no visible output when probed)
+#define PIN_PD8 0x38u // PD8 (RGB LED blue, active-high)
 #define PIN_PC4 0x24u // PC4 (factory_reset line)
 #define PIN_PE6 0x46u // PE6 (USART0 LOC1 RX)
 #define PIN_PE7 0x47u // PE7 (USART0 LOC1 TX)
@@ -58,7 +59,7 @@
 // -----------------
 #define PIN_D0 0x13u // PB3 — RGB LED red (Gecko GPIO 8)
 #define PIN_D1 0x15u // PB5 — RGB LED green (Gecko GPIO 10)
-#define PIN_D2 0x16u // PB6 — RGB LED blue? (Gecko GPIO 11; dark when probed)
+#define PIN_D2 0x38u // PD8 — RGB LED blue (SWD sweep find; not in Gecko OS map)
 #define PIN_D3 0x24u // PC4 — factory_reset line (Gecko GPIO 16)
 #define PIN_D4 0x46u // PE6 — console UART RX (USART0 LOC1)
 #define PIN_D5 0x47u // PE7 — console UART TX (USART0 LOC1)
@@ -70,7 +71,7 @@
 #define LED2        PIN_D2
 #define LED_R       PIN_D0 // bench-confirmed red, active-high
 #define LED_G       PIN_D1 // bench-confirmed green, active-high
-#define LED_B       PIN_D2 // presumed blue; dark when probed (unverified)
+#define LED_B       PIN_D2 // bench-confirmed blue, active-high
 #define BTN0        PIN_D3
 #define LED_BUILTIN PIN_D0
 
