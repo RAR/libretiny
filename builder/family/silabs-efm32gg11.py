@@ -176,27 +176,40 @@ queue.BuildLibraries()
 firmware_elf = "${BUILD_DIR}/firmware.elf"
 firmware_bin = "${BUILD_DIR}/firmware.bin"
 
-env.AddPostAction(
+# The linker script reaches the link line as a bare filename (-T <name>)
+# resolved through LIBPATH, so SCons's dependency scanner never sees the
+# actual file — editing the .ld did not trigger a relink, and the stale ELF
+# (plus the firmware.bin/elf copies, whose post-actions only fire on relink)
+# survived rebuilds until raw_firmware.elf was deleted by hand. Bench-bitten
+# during 2026-06-10 bring-up. Declare the dependency explicitly.
+env.Depends(
     "${BUILD_DIR}/${PROGNAME}.elf",
-    [
-        env.VerboseAction(
-            " ".join(
-                [
-                    "$OBJCOPY",
-                    "-O",
-                    "binary",
-                    "${BUILD_DIR}/${PROGNAME}.elf",
-                    firmware_bin,
-                ]
-            ),
-            "Producing firmware.bin",
-        ),
-        env.VerboseAction(
-            "cp ${BUILD_DIR}/${PROGNAME}.elf " + firmware_elf,
-            "Producing firmware.elf",
-        ),
-    ],
+    join("$MISC_DIR", env.BoardConfig().get("build.ldscript")),
 )
+
+# firmware.bin / firmware.elf are real SCons targets, NOT AddPostAction hooks
+# on the ELF. Post-actions only fire when SCons happens to re-execute the ELF
+# node's own action and proved unreliable on dependency-driven relinks during
+# 2026-06-10 bring-up (raw_firmware.elf relinked, firmware.bin stayed stale —
+# flashing the stale copy cost a debug cycle). As Command targets, SCons
+# rebuilds them whenever the ELF changes or the copies are missing.
+target_fw_bin = env.Command(
+    firmware_bin,
+    "${BUILD_DIR}/${PROGNAME}.elf",
+    env.VerboseAction(
+        "$OBJCOPY -O binary $SOURCE $TARGET",
+        "Producing firmware.bin",
+    ),
+)
+target_fw_elf = env.Command(
+    firmware_elf,
+    "${BUILD_DIR}/${PROGNAME}.elf",
+    env.VerboseAction("cp $SOURCE $TARGET", "Producing firmware.elf"),
+)
+# Pull both into the default build graph via the firmware.uf2 node (built by
+# main.py from the ELF; its stub action also copies firmware.bin, so the
+# dependency is real, not just a graph trick).
+env.Depends("${BUILD_DIR}/firmware.uf2", target_fw_bin + target_fw_elf)
 
 
 # Override main.py's BuildUF2OTA for Phase 1: skip the ltchiptool UF2 packer
