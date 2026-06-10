@@ -22,11 +22,14 @@ _stack_size = 4096;   /* main stack (interrupt context); FreeRTOS task stacks
 
 SECTIONS
 {
-    .isr_vector : {
-        KEEP(*(.isr_vector))
-    } > FLASH
-
     .text : {
+        /* The vendor startup_efm32gg11b.S declares `.section .vectors` with no
+         * flags, so that input section is non-ALLOC. It must live inside an
+         * ALLOC output section to be placed at all — folding it into .text (as
+         * the vendor efm32gg11b.ld does) puts __Vectors at 0x0. A separate
+         * output section inherited the non-ALLOC flag and got overlapped. */
+        KEEP(*(.vectors))
+        KEEP(*(.isr_vector))   /* kept for portability; empty with the vendor startup */
         *(.text*)
         *(.rodata*)
         *(.glue_7)
@@ -54,14 +57,17 @@ SECTIONS
         __copy_table_end__ = .;
     } > FLASH
 
-    /* CMSIS zero table: pairs of (start, word_count) used by Reset_Handler to
-     * zero .bss. Our linker zeroes .bss via the table-less _sbss/_ebss too,
-     * but the startup code uses the table; provide a single entry. */
+    /* CMSIS zero table: pairs of (start, BYTE count). Asymmetric with the copy
+     * table on purpose: the startup zero loop consumes the count directly as
+     * bytes (no `lsls #2`), unlike the copy loop which takes words. The vendor
+     * .ld leaves this table empty and lets newlib crt0 zero the main .bss, but
+     * we redirect __START to lt_main (no crt0), so this entry is the ONLY .bss
+     * zeroing — a word count here leaves 3/4 of .bss as power-on garbage. */
     .zero.table : {
         . = ALIGN(4);
         __zero_table_start__ = .;
         LONG (__bss_start__)
-        LONG ((__bss_end__ - __bss_start__) / 4)
+        LONG (__bss_end__ - __bss_start__)
         __zero_table_end__ = .;
     } > FLASH
 
