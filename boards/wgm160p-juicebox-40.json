@@ -21,13 +21,15 @@
       "PB14": { "GPIO": "PB14", "PHYSICAL": "HFXO_N (50 MHz crystal)" }
     },
     "blacklist": {
-      "PA0":  "Internal WGM160P SiP: WF200 SPI MOSI (USART3 LOC0)",
-      "PA1":  "Internal WGM160P SiP: WF200 SPI MISO (USART3 LOC0)",
-      "PA2":  "Internal WGM160P SiP: WF200 SPI SCK (USART3 LOC0)",
-      "PA3":  "Internal WGM160P SiP: WF200 SPI CS (USART3 LOC0)",
+      "PA0":  "Internal WGM160P SiP: WF200 SDIO DAT0 (LOC1)",
+      "PA1":  "Internal WGM160P SiP: WF200 SDIO DAT1 (LOC1)",
+      "PA2":  "Internal WGM160P SiP: WF200 SDIO DAT2 (LOC1)",
+      "PA3":  "Internal WGM160P SiP: WF200 SDIO DAT3 (LOC1)",
       "PA8":  "Internal WGM160P SiP: WF200 WIRQ",
       "PA12": "Internal WGM160P SiP: WF200 LP_CLK",
       "PE4":  "Internal WGM160P SiP: WF200 WUP",
+      "PE14": "Internal WGM160P SiP: WF200 SDIO CLK (LOC1)",
+      "PE15": "Internal WGM160P SiP: WF200 SDIO CMD (LOC1; open-drain during init)",
       "PF12": "Internal WGM160P SiP: WF200 RESET (active-low)"
     }
   }

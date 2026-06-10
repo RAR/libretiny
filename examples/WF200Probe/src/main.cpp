@@ -1,14 +1,21 @@
-/* WF200 SPI proof-of-life probe for the WGM160P (JuiceBox 40 host).
+/* WF200 SPI proof-of-life probe — WRONG BUS for the WGM160P; kept as a
+ * negative result + template.
  *
- * Phase 2 feasibility recon: reset the in-package WF200, then read its
- * CONFIG register (ID 0) over SPI (USART3 LOC0: PA0=MOSI, PA1=MISO,
- * PA2=SCK; PA3=CS as GPIO; PF12=RESETn; PE4=WUP). Per the wfx-fullMAC
- * driver's sl_wfx_init_bus(), any readback other than 0x00000000 or
- * 0xFFFFFFFF means the part is powered, clocked, and talking.
+ * This probe assumed the in-package WF200 sat on USART3-LOC0 SPI
+ * (PA0-3). It reads 0xFFFFFFFF on a known-working unit because the
+ * WGM160P actually connects its WF200 over **SDIO**: DAT0-3 = PA0-PA3,
+ * CLK = PE14, CMD = PE15, all LOC1 (see the SD-card-slot route in the
+ * GSDK's wfx_host/sdio/bsp_sd_hc.c and the WGM160PX22KGA2 block in
+ * sl_wfx_host_init.c). PA0-3 carry SDIO data lines, which a USART
+ * can't speak. A real proof-of-life needs the GG11 SDIO peripheral
+ * issuing CMD0/CMD8/CMD5 — Phase 2 work, not a register-poke probe.
  *
- * Results are written to `wf200_probe` (read it over SWD — no UART
- * needed) and signaled on the RGB LED: red solid = alive, blue solid =
- * no response.
+ * Control pins (confirmed against GSDK brd4321a config): PF12=RESETn,
+ * PE4=WUP, PA8=WIRQ, PA12=LP_CLK.
+ *
+ * Results land in `wf200_probe` (read over SWD); red LED = non-FF
+ * response (would indicate something SPI-ish actually answered),
+ * blue = no response (expected on a WGM160P).
  */
 
 #include <Arduino.h>
