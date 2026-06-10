@@ -87,11 +87,13 @@ void lt_init_family(void) {
 		// Stop driving the dead oscillator before falling back.
 		CMU_OscillatorEnable(cmuOsc_HFXO, false, false);
 
-		// No HFXO. Bench-confirmed on the JuiceBox 40 (cellular variant): the
-		// 50 MHz crystal never reaches HFXORDY with correct mode/CTUNE/full
-		// power — its power domain appears unpopulated/unpowered on this PCB
-		// (stock never used WiFi on cellular units). The chip is fully usable
-		// without it:
+		// No HFXO. Bench-confirmed on a JuiceBox 40 (WiFi variant): the GG11's
+		// HFXO never reaches HFXORDY in any mode (crystal/AC/DC/digital ext)
+		// with correct CTUNE and full power — the GG11-side 50 MHz source is
+		// simply not usable on that PCB. This does not affect the WF200 (it
+		// is on SDIO with its own clocking and ran WiFi under stock Gecko OS,
+		// which also operated the GG11 without HFXO). The chip is fully
+		// usable without it:
 		//   1. HFRCO 72 MHz band, factory-calibrated in DEVINFO->HFRCOCAL16
 		//      (DWT-measured 72.1 MHz on the bench unit; ±1-3% over temp).
 		//   2. DPLL-discipline the HFRCO to the LFXO when present: 32768 Hz
