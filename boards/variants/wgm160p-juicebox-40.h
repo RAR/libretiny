@@ -6,8 +6,11 @@
  * Pin roles come from the bench-confirmed Gecko OS GPIO usage map of a live
  * JuiceBox 40 (probed via gpio_get/gpio_set over the unauthenticated runtime
  * shell, 2026-05). The JuiceBox repurposes PB5 away from the module's nominal
- * UART_CTS to an RGB LED channel. Per-channel color and drive polarity are not
- * yet probed; for bring-up any channel toggling proves GPIO is alive.
+ * UART_CTS to an RGB LED channel. Colors bench-confirmed 2026-06-10 by driving
+ * each channel via SWD: PB3=red, PB5=green, both active-HIGH. PB6 produced no
+ * visible output when driven high — presumed the blue channel (it is an LED
+ * line in the Gecko OS config); possibly very dim, unpopulated, or dead on the
+ * probed unit. Treat blue as unverified.
  *
  * EFM32 pin encoding: (port_index << 4) | pin_number
  *   port A=0, B=1, C=2, D=3, E=4, F=5
@@ -37,9 +40,9 @@
 
 // Pin function macros
 // -------------------
-#define PIN_PB3 0x13u // PB3 (RGB LED ch)
-#define PIN_PB5 0x15u // PB5 (RGB LED ch)
-#define PIN_PB6 0x16u // PB6 (RGB LED ch)
+#define PIN_PB3 0x13u // PB3 (RGB LED red, active-high)
+#define PIN_PB5 0x15u // PB5 (RGB LED green, active-high)
+#define PIN_PB6 0x16u // PB6 (RGB LED blue?, no visible output when probed)
 #define PIN_PC4 0x24u // PC4 (factory_reset line)
 #define PIN_PE6 0x46u // PE6 (USART0 LOC1 RX)
 #define PIN_PE7 0x47u // PE7 (USART0 LOC1 TX)
@@ -53,9 +56,9 @@
 
 // Arduino pin names
 // -----------------
-#define PIN_D0 0x13u // PB3 — RGB LED ch (Gecko GPIO 8)
-#define PIN_D1 0x15u // PB5 — RGB LED ch (Gecko GPIO 10)
-#define PIN_D2 0x16u // PB6 — RGB LED ch (Gecko GPIO 11)
+#define PIN_D0 0x13u // PB3 — RGB LED red (Gecko GPIO 8)
+#define PIN_D1 0x15u // PB5 — RGB LED green (Gecko GPIO 10)
+#define PIN_D2 0x16u // PB6 — RGB LED blue? (Gecko GPIO 11; dark when probed)
 #define PIN_D3 0x24u // PC4 — factory_reset line (Gecko GPIO 16)
 #define PIN_D4 0x46u // PE6 — console UART RX (USART0 LOC1)
 #define PIN_D5 0x47u // PE7 — console UART TX (USART0 LOC1)
@@ -65,6 +68,9 @@
 #define LED0        PIN_D0
 #define LED1        PIN_D1
 #define LED2        PIN_D2
+#define LED_R       PIN_D0 // bench-confirmed red, active-high
+#define LED_G       PIN_D1 // bench-confirmed green, active-high
+#define LED_B       PIN_D2 // presumed blue; dark when probed (unverified)
 #define BTN0        PIN_D3
 #define LED_BUILTIN PIN_D0
 
