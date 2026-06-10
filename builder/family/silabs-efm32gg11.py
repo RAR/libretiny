@@ -59,13 +59,19 @@ env.Append(
         "--specs=nosys.specs",
         "-Wl,--gc-sections",
         "-Wl,-Map=" + join("$BUILD_DIR", "${PROGNAME}.map"),
-        # Force extraction of lt_fault.c.o from libcore_efm32gg11.a. Nothing
-        # references the fault handlers by name, and the vendor startup object
-        # (always linked, it owns __Vectors) provides weak defaults — so
-        # without this the linker never searches the archive and faults land
-        # in the GSDK's silent `b .` spin instead of our UART frame dumper.
-        # One symbol suffices: extracting the object brings all four handlers.
+        # Force extraction of objects from libcore_efm32gg11.a whose only
+        # entry points are weak-default overrides. The linker resolves a weak
+        # reference (or a weak def in an already-linked object) WITHOUT
+        # searching archives, so these objects silently drop out:
+        #   - lt_fault.c.o: vendor startup owns __Vectors with weak `b .`
+        #     handlers — faults spun silently instead of dumping to UART.
+        #   - lt_init.c.o: lt_init_family() is a weak hook declared in
+        #     cores/common lt_init.h; ld nop'd the call in lt_main and the
+        #     chip ran its whole first bench day on the 19 MHz reset HFRCO
+        #     (DWT-measured) with no clock init at all.
+        # One symbol per object suffices: extraction brings the whole .o.
         "-Wl,--undefined=HardFault_Handler",
+        "-Wl,--undefined=lt_init_family",
         # NOTE: -T <ldscript> is added automatically by PIO's piobuild.py from
         # $LDSCRIPT_PATH (set by env_configure() from board.build.ldscript). The
         # filename is resolved via LIBPATH, which frameworks/base.py prepends
