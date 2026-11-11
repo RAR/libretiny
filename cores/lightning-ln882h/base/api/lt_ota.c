@@ -40,6 +40,7 @@ void lt_ota_set_write_protect(uf2_ota_t *uf2) {
 
 bool lt_ota_switch(bool revert) {
 	LT_DM(OTA, "lt_ota_switch(%d)", revert);
-	ln_nvds_set_ota_upg_state(UPG_STATE_DOWNLOAD_OK);
+	// the bootloader only applies the OTA image in UPG_STATE_DOWNLOAD_OK
+	ln_nvds_set_ota_upg_state(revert ? UPG_STATE_DOWNLOAD_ING : UPG_STATE_DOWNLOAD_OK);
 	return true;
 }
