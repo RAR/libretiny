@@ -20,6 +20,7 @@
 		* [Exception decoder](docs/platform/realtek-ambz/exception-decoder.md)
 	* [Realtek AmebaZ2](docs/platform/realtek-ambz2/README.md)
 	* [Lightning LN882x](docs/platform/lightning-ln882x/README.md)
+	* [Silicon Labs EFM32GG11](docs/platform/silabs-efm32gg11/README.md)
 * [🔧 LT Configuration](docs/dev/config.md)
 * 🧑 Programmer's manual
 	* [⚠️ Migration guide](docs/dev/migration_v1.0.0.md)
