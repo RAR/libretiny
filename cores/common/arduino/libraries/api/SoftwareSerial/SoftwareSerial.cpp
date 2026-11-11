@@ -34,7 +34,11 @@ size_t SoftwareSerial::write(uint8_t c) {
 	while (data.tx.buf->isFull()) {
 		yield();
 	}
+	// the TX timer interrupt handler calls read_char(); don't let it run in the middle of store_char(),
+	// as both of them modify the buffer's element count
+	taskENTER_CRITICAL();
 	data.tx.buf->store_char(c);
+	taskEXIT_CRITICAL();
 	if (data.tx.state == SS_IDLE) {
 		data.tx.state = SS_START;
 		this->startTx();

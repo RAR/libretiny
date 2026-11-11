@@ -148,7 +148,15 @@ int SerialClass::peek() {
 }
 
 int SerialClass::read() {
-	return this->rxBuf ? this->rxBuf->read_char() : -1;
+	if (!this->rxBuf)
+		return -1;
+	int c; // declared outside, as taskENTER_CRITICAL() opens a block on some ports (Beken)
+	// the RX interrupt handler calls store_char(); don't let it run in the middle of read_char(),
+	// as both of them modify the buffer's element count
+	taskENTER_CRITICAL();
+	c = this->rxBuf->read_char();
+	taskEXIT_CRITICAL();
+	return c;
 }
 
 #if LT_HW_UART0
