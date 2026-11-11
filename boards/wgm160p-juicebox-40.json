@@ -1,0 +1,66 @@
+{
+	"_base": [
+		"generic",
+		"silabs-efm32gg11",
+		"ic/efm32gg11b820-qfn64"
+	],
+	"build": {
+		"mcu": "efm32gg11",
+		"variant": "wgm160p-juicebox-40"
+	},
+	"name": "Enel X JuiceBox 40 (WGM160P host)",
+	"url": "https://www.silabs.com/wireless/wi-fi/wgm160-series-wi-fi-modules",
+	"vendor": "Silicon Labs",
+	"connectivity": [
+		"wifi"
+	],
+	"doc": {
+		"params": {
+			"manufacturer": "Silicon Labs",
+			"series": "EFM32GG11",
+			"extra": {
+				"Wi-Fi": "802.11 b/g/n (WF200)"
+			}
+		},
+		"links": {
+			"Info & flashing guide": "../../docs/platform/silabs-efm32gg11/README.md"
+		}
+	},
+	"pcb": {
+		"symbol": "WGM160P",
+		"pinout": {
+			"25": {
+				"IC": 11,
+				"ARD": "D0"
+			},
+			"26": {
+				"IC": 12,
+				"ARD": "D1"
+			},
+			"36": {
+				"IC": 35,
+				"ARD": "D2"
+			},
+			"49": {
+				"IC": 13,
+				"ARD": "D3"
+			},
+			"47": {
+				"IC": 43,
+				"ARD": "D4"
+			},
+			"46": {
+				"IC": 44,
+				"ARD": "D5"
+			},
+			"22": {
+				"IC": 9,
+				"ARD": "D6"
+			},
+			"42": {
+				"IC": 48,
+				"ARD": "D7"
+			}
+		}
+	}
+}

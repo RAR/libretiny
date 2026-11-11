@@ -1,0 +1,158 @@
+{
+	"_base": [
+		"generic",
+		"silabs-efm32gg11",
+		"ic/efm32gg11b820-qfn64"
+	],
+	"build": {
+		"mcu": "efm32gg11",
+		"variant": "generic-wgm160p"
+	},
+	"name": "Generic - WGM160P",
+	"symbol": "WGM160P",
+	"url": "https://docs.libretiny.eu/boards/generic-wgm160p/",
+	"vendor": "Generic",
+	"connectivity": [
+		"wifi"
+	],
+	"doc": {
+		"params": {
+			"manufacturer": "Silicon Labs",
+			"series": "EFM32GG11",
+			"extra": {
+				"Wi-Fi": "802.11 b/g/n (WF200)"
+			}
+		},
+		"links": {
+			"Info & flashing guide": "../../docs/platform/silabs-efm32gg11/README.md"
+		}
+	},
+	"pcb": {
+		"pinout": {
+			"14": {
+				"IC": 62,
+				"ARD": "D0"
+			},
+			"15": {
+				"IC": 63,
+				"ARD": "D1"
+			},
+			"16": {
+				"IC": 1,
+				"ARD": "D2"
+			},
+			"17": {
+				"IC": 2,
+				"ARD": "D3"
+			},
+			"18": {
+				"IC": 3,
+				"ARD": "D4"
+			},
+			"19": {
+				"IC": 4,
+				"ARD": "D5"
+			},
+			"20": {
+				"IC": 5,
+				"ARD": "D6"
+			},
+			"21": {
+				"IC": 6,
+				"ARD": "D7"
+			},
+			"22": {
+				"IC": 9,
+				"ARD": "D8"
+			},
+			"24": {
+				"IC": 10,
+				"ARD": "D9"
+			},
+			"25": {
+				"IC": 11,
+				"ARD": "D10"
+			},
+			"26": {
+				"IC": 12,
+				"ARD": "D11"
+			},
+			"28": {
+				"IC": 25,
+				"ARD": "D12"
+			},
+			"29": {
+				"IC": 26,
+				"ARD": "D13"
+			},
+			"31": {
+				"IC": 22,
+				"ARD": "D14"
+			},
+			"32": {
+				"IC": 23,
+				"ARD": "D15"
+			},
+			"35": {
+				"IC": 34,
+				"ARD": "D16"
+			},
+			"36": {
+				"IC": 35,
+				"ARD": "D17"
+			},
+			"37": {
+				"IC": 51,
+				"ARD": "D18"
+			},
+			"38": {
+				"IC": 54,
+				"ARD": "D19"
+			},
+			"39": {
+				"IC": 14,
+				"ARD": "D20"
+			},
+			"41": {
+				"IC": 47,
+				"ARD": "D21"
+			},
+			"42": {
+				"IC": 48,
+				"ARD": "D22"
+			},
+			"44": {
+				"IC": 49,
+				"ARD": "D23"
+			},
+			"45": {
+				"IC": 50,
+				"ARD": "D24"
+			},
+			"46": {
+				"IC": 44,
+				"ARD": "D25"
+			},
+			"47": {
+				"IC": 43,
+				"ARD": "D26"
+			},
+			"48": {
+				"IC": 42,
+				"ARD": "D27"
+			},
+			"49": {
+				"IC": 13,
+				"ARD": "D28"
+			},
+			"50": {
+				"IC": 7,
+				"ARD": "D29"
+			},
+			"51": {
+				"IC": 64,
+				"ARD": "D30"
+			}
+		}
+	}
+}
