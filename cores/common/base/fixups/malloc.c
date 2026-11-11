@@ -13,6 +13,27 @@
 // no such thing in FreeRTOS, but present on most vendor SDKs
 extern void *LT_REALLOC_FUNC(void *pv, size_t xWantedSize);
 
+#if LT_REMALLOC
+// realloc() as malloc + copy + free. Size 0 frees and returns NULL (heap_4
+// returns NULL for 0 bytes and would fire the malloc-failed hook); a NULL
+// ptr skips the copy.
+static void *lt_remalloc(void *ptr, size_t new_size) {
+	void *nptr;
+	if (new_size == 0) {
+		vPortFree(ptr);
+		return NULL;
+	}
+	nptr = pvPortMalloc(new_size);
+	if (nptr) {
+		if (ptr)
+			// the old size is unknown: growing over-reads the old block
+			memcpy(nptr, ptr, new_size);
+		vPortFree(ptr);
+	}
+	return nptr;
+}
+#endif
+
 void *__wrap_malloc(size_t size) {
 	return pvPortMalloc(size);
 }
@@ -29,12 +50,7 @@ void *__wrap_calloc(size_t num, size_t size) {
 
 void *__wrap_realloc(void *ptr, size_t new_size) {
 #if LT_REMALLOC
-	void *nptr = pvPortMalloc(new_size);
-	if (nptr) {
-		memcpy(nptr, ptr, new_size);
-		vPortFree(ptr);
-	}
-	return nptr;
+	return lt_remalloc(ptr, new_size);
 #else
 	return LT_REALLOC_FUNC(ptr, new_size);
 #endif
@@ -62,12 +78,7 @@ void *__wrap__calloc_r(void *reent, size_t num, size_t size) {
 
 void *__wrap__realloc_r(void *reent, void *ptr, size_t new_size) {
 #if LT_REMALLOC
-	void *nptr = pvPortMalloc(new_size);
-	if (nptr) {
-		memcpy(nptr, ptr, new_size);
-		vPortFree(ptr);
-	}
-	return nptr;
+	return lt_remalloc(ptr, new_size);
 #else
 	return LT_REALLOC_FUNC(ptr, new_size);
 #endif
