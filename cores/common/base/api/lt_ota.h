@@ -144,3 +144,27 @@ uf2_ota_scheme_t lt_ota_get_uf2_scheme();
  * @return false if the second image (or upgrade image) is not valid; false if writing failed; true otherwise
  */
 bool lt_ota_switch(bool revert);
+
+/**
+ * @brief Mark the running image as working.
+ *
+ * On families whose bootloader gives a newly activated image a limited number
+ * of trial boots (silabs-efm32gg11), an image that is not confirmed before the
+ * attempts run out is reverted to the previous one. The Arduino core calls this
+ * after setup() returns, unless built with LT_OTA_AUTO_CONFIRM=0; an
+ * application that disables that, or does not use the Arduino framework, must
+ * call it once it considers the update healthy. Cheap and safe to call
+ * repeatedly: it writes flash only on the first call after an update. Does
+ * nothing on other families.
+ */
+void lt_ota_confirm();
+
+/**
+ * @brief Called by lt_ota_end() when the update was written completely, just
+ * before lt_ota_switch() activates it, so that a family can tell a complete
+ * image from an aborted one. This shouldn't be called manually. Weak no-op
+ * default.
+ *
+ * @param ctx OTA context
+ */
+void lt_ota_staged(lt_ota_ctx_t *ctx);

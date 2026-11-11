@@ -38,6 +38,7 @@ bool lt_ota_end(lt_ota_ctx_t *ctx) {
 
 	if (ctx->bytes_written && ctx->bytes_written == ctx->bytes_total) {
 		// try to activate the 2nd image
+		lt_ota_staged(ctx);
 		return lt_ota_switch(/* revert= */ false);
 	}
 
@@ -63,6 +64,10 @@ bool lt_ota_cancel(lt_ota_ctx_t *ctx) {
 }
 
 __attribute__((weak)) void lt_ota_set_write_protect(uf2_ota_t *uf2) {}
+
+__attribute__((weak)) void lt_ota_confirm(void) {}
+
+__attribute__((weak)) void lt_ota_staged(lt_ota_ctx_t *ctx) {}
 
 size_t lt_ota_write(lt_ota_ctx_t *ctx, const uint8_t *data, size_t len) {
 	if (!ctx || !ctx->running)
