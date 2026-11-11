@@ -94,7 +94,7 @@ bool UpdateClass::end(bool evenIfRemaining) {
 
 /**
  * @brief Cleanup (free) the update context.
- * Try activating the firmware if possible, set local error codes.
+ * Verify the MD5 (if set), then try activating the firmware if possible, set local error codes.
  *
  * @param clearError assume successful finish after correct activation
  */
@@ -102,13 +102,15 @@ void UpdateClass::cleanup(bool clearError) {
 	if (!this->ctx)
 		return;
 
-	if (!lt_ota_end(this->ctx)) {
+	if (this->md5Digest && this->md5Expected && memcmp(this->md5Digest, this->md5Expected, 16) != 0) {
+		// MD5 doesn't match; don't activate the firmware, revert to the running image
+		if (!lt_ota_cancel(this->ctx))
+			LT_W("Reverting to the running image failed!");
+		this->errArd = UPDATE_ERROR_MD5;
+		this->errUf2 = UF2_ERR_OK;
+	} else if (!lt_ota_end(this->ctx)) {
 		// activating firmware failed
 		this->errArd = UPDATE_ERROR_ACTIVATE;
-		this->errUf2 = UF2_ERR_OK;
-	} else if (this->md5Digest && this->md5Expected && memcmp(this->md5Digest, this->md5Expected, 16) != 0) {
-		// MD5 doesn't match
-		this->errArd = UPDATE_ERROR_MD5;
 		this->errUf2 = UF2_ERR_OK;
 	} else if (clearError) {
 		// successful finish and activation, clear error codes

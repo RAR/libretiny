@@ -45,6 +45,23 @@ bool lt_ota_end(lt_ota_ctx_t *ctx) {
 	return true;
 }
 
+bool lt_ota_cancel(lt_ota_ctx_t *ctx) {
+	if (!ctx || !ctx->running)
+		return true;
+
+	uf2_ctx_free(&ctx->uf2);
+	uf2_info_free(&ctx->info);
+	ctx->running = false;
+
+	if (ctx->bytes_written) {
+		// make sure the written image doesn't boot
+		return lt_ota_switch(/* revert= */ true);
+	}
+
+	// nothing was written
+	return true;
+}
+
 __attribute__((weak)) void lt_ota_set_write_protect(uf2_ota_t *uf2) {}
 
 size_t lt_ota_write(lt_ota_ctx_t *ctx, const uint8_t *data, size_t len) {

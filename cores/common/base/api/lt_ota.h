@@ -49,6 +49,17 @@ void lt_ota_begin(lt_ota_ctx_t *ctx, size_t size);
 bool lt_ota_end(lt_ota_ctx_t *ctx);
 
 /**
+ * @brief Finish the update process without activating the target image, e.g. when
+ * it failed verification. If anything has been written, revert to the running image
+ * (using lt_ota_switch()), so that the target image doesn't boot. Free allocated
+ * internal structures, regardless of the result.
+ *
+ * @param ctx OTA context
+ * @return false if reverting was attempted and not successful; true otherwise
+ */
+bool lt_ota_cancel(lt_ota_ctx_t *ctx);
+
+/**
  * @brief Set family-specific, write-protected flash areas in the OTA update context.
  * This shouldn't be called manually, as it's done by lt_ota_begin().
  *
