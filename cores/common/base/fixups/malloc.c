@@ -14,20 +14,41 @@
 extern void *LT_REALLOC_FUNC(void *pv, size_t xWantedSize);
 
 #if LT_REMALLOC
+// Header that FreeRTOS heap_4/heap_5 put before each block: BlockLink_t, padded to
+// portBYTE_ALIGNMENT. xBlockSize includes the header and has its top bit set while
+// the block is allocated. LT_REMALLOC requires such a heap (beken-bdk/heap_4.c and
+// lightning-ln882h/heap_5.c in library-freertos-port).
+typedef struct {
+	void *pxNextFreeBlock;
+	size_t xBlockSize;
+} lt_heap_block_t;
+
+#define LT_HEAP_HEADER_SIZE ((sizeof(lt_heap_block_t) + portBYTE_ALIGNMENT - 1) & ~((size_t)portBYTE_ALIGNMENT_MASK))
+#define LT_HEAP_ALLOC_BIT	((size_t)1 << (sizeof(size_t) * 8 - 1))
+
+// usable size of a block returned by pvPortMalloc() (at least the requested size)
+static size_t lt_heap_block_size(void *ptr) {
+	lt_heap_block_t *block = (lt_heap_block_t *)((uint8_t *)ptr - LT_HEAP_HEADER_SIZE);
+	return (block->xBlockSize & ~LT_HEAP_ALLOC_BIT) - LT_HEAP_HEADER_SIZE;
+}
+
 // realloc() as malloc + copy + free. Size 0 frees and returns NULL (heap_4
 // returns NULL for 0 bytes and would fire the malloc-failed hook); a NULL
 // ptr skips the copy.
 static void *lt_remalloc(void *ptr, size_t new_size) {
 	void *nptr;
+	size_t old_size;
 	if (new_size == 0) {
 		vPortFree(ptr);
 		return NULL;
 	}
 	nptr = pvPortMalloc(new_size);
 	if (nptr) {
-		if (ptr)
-			// the old size is unknown: growing over-reads the old block
-			memcpy(nptr, ptr, new_size);
+		if (ptr) {
+			// copy no more than the old block holds
+			old_size = lt_heap_block_size(ptr);
+			memcpy(nptr, ptr, old_size < new_size ? old_size : new_size);
+		}
 		vPortFree(ptr);
 	}
 	return nptr;
