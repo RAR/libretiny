@@ -1,0 +1,331 @@
+{
+	"build": {
+		"ic": "efm32gg11b820f2048gm64",
+		"package": "QFN64"
+	},
+	"pcb": {
+		"ic": {
+			"1": {
+				"C_NAME": "PA_0",
+				"GPIO": "PA00",
+				"GPIONUM": 0,
+				"IRQ": null
+			},
+			"2": {
+				"C_NAME": "PA_1",
+				"GPIO": "PA01",
+				"GPIONUM": 1,
+				"IRQ": null
+			},
+			"3": {
+				"C_NAME": "PA_2",
+				"GPIO": "PA02",
+				"GPIONUM": 2,
+				"IRQ": null
+			},
+			"4": {
+				"C_NAME": "PA_3",
+				"GPIO": "PA03",
+				"GPIONUM": 3,
+				"IRQ": null
+			},
+			"5": {
+				"C_NAME": "PA_4",
+				"GPIO": "PA04",
+				"GPIONUM": 4,
+				"IRQ": null
+			},
+			"6": {
+				"C_NAME": "PA_5",
+				"GPIO": "PA05",
+				"GPIONUM": 5,
+				"IRQ": null
+			},
+			"7": {
+				"C_NAME": "PA_6",
+				"GPIO": "PA06",
+				"GPIONUM": 6,
+				"IRQ": null
+			},
+			"9": {
+				"C_NAME": "PB_3",
+				"GPIO": "PB03",
+				"GPIONUM": 19,
+				"IRQ": null
+			},
+			"10": {
+				"C_NAME": "PB_4",
+				"GPIO": "PB04",
+				"GPIONUM": 20,
+				"IRQ": null
+			},
+			"11": {
+				"C_NAME": "PB_5",
+				"GPIO": "PB05",
+				"GPIONUM": 21,
+				"IRQ": null,
+				"PWM": 0
+			},
+			"12": {
+				"C_NAME": "PB_6",
+				"GPIO": "PB06",
+				"GPIONUM": 22,
+				"IRQ": null,
+				"PWM": 1
+			},
+			"13": {
+				"C_NAME": "PC_4",
+				"GPIO": "PC04",
+				"GPIONUM": 36,
+				"IRQ": null
+			},
+			"14": {
+				"C_NAME": "PC_5",
+				"GPIO": "PC05",
+				"GPIONUM": 37,
+				"IRQ": null
+			},
+			"15": {
+				"C_NAME": "PB_7",
+				"GPIO": "PB07",
+				"GPIONUM": 23,
+				"IRQ": null,
+				"UART": "0_TX"
+			},
+			"16": {
+				"C_NAME": "PB_8",
+				"GPIO": "PB08",
+				"GPIONUM": 24,
+				"IRQ": null,
+				"UART": "0_RX"
+			},
+			"17": {
+				"C_NAME": "PA_8",
+				"GPIO": "PA08",
+				"GPIONUM": 8,
+				"IRQ": null
+			},
+			"18": {
+				"C_NAME": "PA_12",
+				"GPIO": "PA12",
+				"GPIONUM": 12,
+				"IRQ": null
+			},
+			"19": {
+				"C_NAME": "PA_13",
+				"GPIO": "PA13",
+				"GPIONUM": 13,
+				"IRQ": null
+			},
+			"20": {
+				"C_NAME": "PA_14",
+				"GPIO": "PA14",
+				"GPIONUM": 14,
+				"IRQ": null
+			},
+			"21": {
+				"IO": "I",
+				"CTRL": "RESETn"
+			},
+			"22": {
+				"C_NAME": "PB_11",
+				"GPIO": "PB11",
+				"GPIONUM": 27,
+				"IRQ": null
+			},
+			"23": {
+				"C_NAME": "PB_12",
+				"GPIO": "PB12",
+				"GPIONUM": 28,
+				"IRQ": null
+			},
+			"25": {
+				"C_NAME": "PB_13",
+				"GPIO": "PB13",
+				"GPIONUM": 29,
+				"IRQ": null
+			},
+			"26": {
+				"C_NAME": "PB_14",
+				"GPIO": "PB14",
+				"GPIONUM": 30,
+				"IRQ": null
+			},
+			"28": {
+				"C_NAME": "PD_0",
+				"GPIO": "PD00",
+				"GPIONUM": 48,
+				"IRQ": null
+			},
+			"29": {
+				"C_NAME": "PD_1",
+				"GPIO": "PD01",
+				"GPIONUM": 49,
+				"IRQ": null
+			},
+			"30": {
+				"C_NAME": "PD_2",
+				"GPIO": "PD02",
+				"GPIONUM": 50,
+				"IRQ": null
+			},
+			"31": {
+				"C_NAME": "PD_3",
+				"GPIO": "PD03",
+				"GPIONUM": 51,
+				"IRQ": null
+			},
+			"32": {
+				"C_NAME": "PD_4",
+				"GPIO": "PD04",
+				"GPIONUM": 52,
+				"IRQ": null
+			},
+			"33": {
+				"C_NAME": "PD_5",
+				"GPIO": "PD05",
+				"GPIONUM": 53,
+				"IRQ": null
+			},
+			"34": {
+				"C_NAME": "PD_6",
+				"GPIO": "PD06",
+				"GPIONUM": 54,
+				"IRQ": null
+			},
+			"35": {
+				"C_NAME": "PD_8",
+				"GPIO": "PD08",
+				"GPIONUM": 56,
+				"IRQ": null,
+				"PWM": 2
+			},
+			"41": {
+				"C_NAME": "PE_4",
+				"GPIO": "PE04",
+				"GPIONUM": 68,
+				"IRQ": null
+			},
+			"42": {
+				"C_NAME": "PE_5",
+				"GPIO": "PE05",
+				"GPIONUM": 69,
+				"IRQ": null
+			},
+			"43": {
+				"C_NAME": "PE_6",
+				"GPIO": "PE06",
+				"GPIONUM": 70,
+				"IRQ": null,
+				"UART": "0_RX"
+			},
+			"44": {
+				"C_NAME": "PE_7",
+				"GPIO": "PE07",
+				"GPIONUM": 71,
+				"IRQ": null,
+				"UART": "0_TX"
+			},
+			"47": {
+				"C_NAME": "PF_10",
+				"GPIO": "PF10",
+				"GPIONUM": 90,
+				"IRQ": null
+			},
+			"48": {
+				"C_NAME": "PF_11",
+				"GPIO": "PF11",
+				"GPIONUM": 91,
+				"IRQ": null
+			},
+			"49": {
+				"C_NAME": "PF_0",
+				"GPIO": "PF00",
+				"GPIONUM": 80,
+				"IRQ": null
+			},
+			"50": {
+				"C_NAME": "PF_1",
+				"GPIO": "PF01",
+				"GPIONUM": 81,
+				"IRQ": null
+			},
+			"51": {
+				"C_NAME": "PF_2",
+				"GPIO": "PF02",
+				"GPIONUM": 82,
+				"IRQ": null
+			},
+			"53": {
+				"C_NAME": "PF_12",
+				"GPIO": "PF12",
+				"GPIONUM": 92,
+				"IRQ": null
+			},
+			"54": {
+				"C_NAME": "PF_5",
+				"GPIO": "PF05",
+				"GPIONUM": 85,
+				"IRQ": null
+			},
+			"56": {
+				"C_NAME": "PE_8",
+				"GPIO": "PE08",
+				"GPIONUM": 72,
+				"IRQ": null
+			},
+			"57": {
+				"C_NAME": "PE_9",
+				"GPIO": "PE09",
+				"GPIONUM": 73,
+				"IRQ": null
+			},
+			"58": {
+				"C_NAME": "PE_10",
+				"GPIO": "PE10",
+				"GPIONUM": 74,
+				"IRQ": null,
+				"UART": "0_TX"
+			},
+			"59": {
+				"C_NAME": "PE_11",
+				"GPIO": "PE11",
+				"GPIONUM": 75,
+				"IRQ": null,
+				"UART": "0_RX"
+			},
+			"60": {
+				"C_NAME": "PE_12",
+				"GPIO": "PE12",
+				"GPIONUM": 76,
+				"IRQ": null,
+				"UART": "0_RX"
+			},
+			"61": {
+				"C_NAME": "PE_13",
+				"GPIO": "PE13",
+				"GPIONUM": 77,
+				"IRQ": null,
+				"UART": "0_TX"
+			},
+			"62": {
+				"C_NAME": "PE_14",
+				"GPIO": "PE14",
+				"GPIONUM": 78,
+				"IRQ": null
+			},
+			"63": {
+				"C_NAME": "PE_15",
+				"GPIO": "PE15",
+				"GPIONUM": 79,
+				"IRQ": null
+			},
+			"64": {
+				"C_NAME": "PA_15",
+				"GPIO": "PA15",
+				"GPIONUM": 15,
+				"IRQ": null
+			}
+		}
+	}
+}

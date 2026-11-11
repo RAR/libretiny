@@ -1,0 +1,7 @@
+/test_crc32
+/test_meta
+/test_boot
+/test_app
+*.dSYM/
+/test_image
+/test_pyimage
